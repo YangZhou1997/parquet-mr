@@ -105,6 +105,10 @@ public class ParquetFileReader implements Closeable {
 
   public static int MyFooterLength;
 
+  public org.apache.parquet.format.FileMetaData getParquetFileMetaData() {
+      return this.converter.fileMetaData;
+  }
+
   /**
    * for files provided, check if there's a summary file.
    * If a summary file is found it is used otherwise the file footer is used.

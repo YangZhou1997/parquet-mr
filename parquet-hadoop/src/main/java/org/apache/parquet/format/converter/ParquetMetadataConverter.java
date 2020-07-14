@@ -91,6 +91,9 @@ public class ParquetMetadataConverter {
 
   private final boolean useSignedStringMinMax;
 
+//   org.apache.parquet.format.FileMetaData
+  public FileMetaData fileMetaData = null;
+
   public ParquetMetadataConverter() {
     this(false);
   }
@@ -882,6 +885,7 @@ public class ParquetMetadataConverter {
       }
     });
     LOG.debug("{}", fileMetaData);
+    this.fileMetaData = fileMetaData;
     ParquetMetadata parquetMetadata = fromParquetMetadata(fileMetaData);
     if (LOG.isDebugEnabled()) LOG.debug(ParquetMetadata.toPrettyJSON(parquetMetadata));
     return parquetMetadata;
