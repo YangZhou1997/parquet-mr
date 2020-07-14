@@ -18,6 +18,8 @@
  */
 package org.apache.parquet.column.page;
 
+import org.apache.parquet.format.PageHeader;
+
 /**
  * Reader for a sequence a page from a given column chunk
  */
@@ -27,14 +29,22 @@ public interface PageReader {
   * @return the dictionary page in that chunk or null if none
   */
   DictionaryPage readDictionaryPage();
-
+  DictionaryPage readRawDictionaryPage();
+  
   /**
    * @return the total number of values in the column chunk
    */
   long getTotalValueCount();
 
   /**
+   * @return the pageheader in that chunk
+   */
+  PageHeader readPageHeader();
+
+  /**
    * @return the next page in that chunk or null if after the last page
    */
   DataPage readPage();
+  DataPage readRawPage();
+
 }

@@ -103,6 +103,8 @@ public class ParquetFileReader implements Closeable {
 
   private final ParquetMetadataConverter converter;
 
+  public static int MyFooterLength;
+
   /**
    * for files provided, check if there's a summary file.
    * If a summary file is found it is used otherwise the file footer is used.
@@ -518,6 +520,7 @@ public class ParquetFileReader implements Closeable {
 
     f.seek(footerLengthIndex);
     int footerLength = readIntLittleEndian(f);
+    MyFooterLength = footerLength;
     byte[] magic = new byte[MAGIC.length];
     f.readFully(magic);
     if (!Arrays.equals(MAGIC, magic)) {
@@ -943,11 +946,13 @@ public class ParquetFileReader implements Closeable {
     public ColumnChunkPageReader readAllPages() throws IOException {
       List<DataPage> pagesInChunk = new ArrayList<DataPage>();
       DictionaryPage dictionaryPage = null;
+      List<PageHeader> pageheaders = new ArrayList<PageHeader>();
       PrimitiveType type = getFileMetaData().getSchema()
           .getType(descriptor.col.getPath()).asPrimitiveType();
       long valuesCountReadSoFar = 0;
       while (valuesCountReadSoFar < descriptor.metadata.getValueCount()) {
         PageHeader pageHeader = readPageHeader();
+        pageheaders.add(pageHeader);
         int uncompressedPageSize = pageHeader.getUncompressed_page_size();
         int compressedPageSize = pageHeader.getCompressed_page_size();
         switch (pageHeader.type) {
@@ -1018,7 +1023,7 @@ public class ParquetFileReader implements Closeable {
             + " pages ending at file offset " + (descriptor.fileOffset + stream.position()));
       }
       BytesInputDecompressor decompressor = options.getCodecFactory().getDecompressor(descriptor.metadata.getCodec());
-      return new ColumnChunkPageReader(decompressor, pagesInChunk, dictionaryPage);
+      return new ColumnChunkPageReader(decompressor, pagesInChunk, dictionaryPage, pageheaders);
     }
 
     /**

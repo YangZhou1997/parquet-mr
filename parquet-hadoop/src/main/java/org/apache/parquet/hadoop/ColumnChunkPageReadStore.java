@@ -37,6 +37,7 @@ import org.apache.parquet.compression.CompressionCodecFactory;
 import org.apache.parquet.compression.CompressionCodecFactory.BytesInputDecompressor;
 import org.apache.parquet.hadoop.CodecFactory.BytesDecompressor;
 import org.apache.parquet.io.ParquetDecodingException;
+import org.apache.parquet.format.PageHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,11 +63,13 @@ class ColumnChunkPageReadStore implements PageReadStore, DictionaryPageReadStore
     private final long valueCount;
     private final List<DataPage> compressedPages;
     private final DictionaryPage compressedDictionaryPage;
+    private final List<PageHeader> pageheaders;
 
-    ColumnChunkPageReader(BytesInputDecompressor decompressor, List<DataPage> compressedPages, DictionaryPage compressedDictionaryPage) {
+    ColumnChunkPageReader(BytesInputDecompressor decompressor, List<DataPage> compressedPages, DictionaryPage compressedDictionaryPage, List<PageHeader> pageheaders) {
       this.decompressor = decompressor;
       this.compressedPages = new LinkedList<DataPage>(compressedPages);
       this.compressedDictionaryPage = compressedDictionaryPage;
+      this.pageheaders = new LinkedList<PageHeader>(pageheaders);
       long count = 0;
       for (DataPage p : compressedPages) {
         count += p.getValueCount();
@@ -77,6 +80,24 @@ class ColumnChunkPageReadStore implements PageReadStore, DictionaryPageReadStore
     @Override
     public long getTotalValueCount() {
       return valueCount;
+    }
+    
+    @Override
+    public PageHeader readPageHeader(){
+        if (pageheaders.isEmpty()) {
+            return null;
+        }
+        PageHeader pageHeader = pageheaders.remove(0);
+        return pageHeader;
+    }
+    
+    @Override
+    public DataPage readRawPage() {
+        if (compressedPages.isEmpty()) {
+            return null;
+        }
+        DataPage compressedPage = compressedPages.remove(0);
+        return compressedPage;
     }
 
     @Override
@@ -127,6 +148,11 @@ class ColumnChunkPageReadStore implements PageReadStore, DictionaryPageReadStore
           }
         }
       });
+    }
+
+    @Override
+    public DictionaryPage readRawDictionaryPage() {
+        return compressedDictionaryPage;
     }
 
     @Override

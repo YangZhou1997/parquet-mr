@@ -91,7 +91,8 @@
     <pig.version>0.16.0</pig.version>
     <pig.classifier>h2</pig.classifier>
     <thrift-maven-plugin.version>0.10.0</thrift-maven-plugin.version>
-    <thrift.version>0.9.3</thrift.version>
+    <!-- <thrift.version>0.9.3</thrift.version> -->
+    <thrift.version>0.12.0</thrift.version>
     <fastutil.version>7.0.13</fastutil.version>
     <semver.api.version>0.9.33</semver.api.version>
     <slf4j.version>1.7.22</slf4j.version>
@@ -203,6 +204,20 @@
   <build>
     <pluginManagement>
       <plugins>
+
+        <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+            <execution>
+                <id>attach-sources</id>
+                <goals>
+                    <goal>jar</goal>
+                </goals>
+            </execution>
+        </executions>
+       </plugin>
+     
         <plugin>
           <!-- Disable the source artifact from ASF parent -->
           <artifactId>maven-assembly-plugin</artifactId>
@@ -574,7 +589,8 @@
     <profile>
       <id>thrift9</id>
       <properties>
-        <thrift.version>0.9.0</thrift.version>
+        <!-- <thrift.version>0.9.0</thrift.version> -->
+        <thrift.version>0.12.0</thrift.version>
       </properties>
     </profile>
   </profiles>
