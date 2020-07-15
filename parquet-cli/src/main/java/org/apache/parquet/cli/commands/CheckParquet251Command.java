@@ -162,6 +162,19 @@ public class CheckParquet251Command extends BaseCommand {
     public DataPage readPage() {
       return data;
     }
+
+    @Override
+    public DataPage readRawPage() {
+        return null;
+    }
+    @Override
+    public DictionaryPage readRawDictionaryPage() {
+      return null;
+    }
+    @Override
+    public org.apache.parquet.format.PageHeader readPageHeader() {
+        return null;
+    }
   }
 
   private static <T extends Comparable<T>>

@@ -139,7 +139,7 @@ public class TestStatistics {
     public DictionaryPage readDictionaryPage() {
       return dict;
     }
-
+    
     @Override
     public long getTotalValueCount() {
       return data.getValueCount();
@@ -148,6 +148,19 @@ public class TestStatistics {
     @Override
     public DataPage readPage() {
       return data;
+    }
+
+    @Override
+    public DataPage readRawPage() {
+        return null;
+    }
+    @Override
+    public DictionaryPage readRawDictionaryPage() {
+      return null;
+    }
+    @Override
+    public org.apache.parquet.format.PageHeader readPageHeader() {
+        return null;
     }
   }
 

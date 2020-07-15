@@ -26,7 +26,6 @@ import org.apache.parquet.column.page.DictionaryPage;
 import org.apache.parquet.column.page.DataPage;
 import org.apache.parquet.column.page.PageReader;
 import org.apache.parquet.io.ParquetDecodingException;
-import org.apache.parquet.format.PageHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,11 +51,6 @@ public class MemPageReader implements PageReader {
   }
 
   @Override
-  public PageHeader readPageHeader() {
-      return null;
-  }
-
-  @Override
   public DataPage readPage() {
     if (pages.hasNext()) {
       DataPage next = pages.next();
@@ -66,11 +60,6 @@ public class MemPageReader implements PageReader {
       throw new ParquetDecodingException("after last page");
     }
   }
-  
-  @Override
-  public DataPage readRawPage() {
-      return null;
-  }
 
   @Override
   public DictionaryPage readDictionaryPage() {
@@ -78,8 +67,16 @@ public class MemPageReader implements PageReader {
   }
   
   @Override
+  public DataPage readRawPage() {
+      return null;
+  }
+  @Override
   public DictionaryPage readRawDictionaryPage() {
     return null;
+  }
+  @Override
+  public org.apache.parquet.format.PageHeader readPageHeader() {
+      return null;
   }
   
 
