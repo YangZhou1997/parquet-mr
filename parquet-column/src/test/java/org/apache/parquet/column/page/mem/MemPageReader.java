@@ -26,6 +26,7 @@ import org.apache.parquet.column.page.DictionaryPage;
 import org.apache.parquet.column.page.DataPage;
 import org.apache.parquet.column.page.PageReader;
 import org.apache.parquet.io.ParquetDecodingException;
+import org.apache.parquet.format.PageHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +49,11 @@ public class MemPageReader implements PageReader {
   @Override
   public long getTotalValueCount() {
     return totalValueCount;
+  }
+
+  @Override
+  public PageHeader readPageHeader() {
+      return null;
   }
 
   @Override
