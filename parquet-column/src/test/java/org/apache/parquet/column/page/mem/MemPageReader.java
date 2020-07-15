@@ -60,10 +60,21 @@ public class MemPageReader implements PageReader {
       throw new ParquetDecodingException("after last page");
     }
   }
+  
+  @Override
+  public DataPage readRawPage() {
+      return null;
+  }
 
   @Override
   public DictionaryPage readDictionaryPage() {
     return dictionaryPage;
   }
+  
+  @Override
+  public DictionaryPage readRawDictionaryPage() {
+    return null;
+  }
+  
 
 }
